@@ -87,8 +87,8 @@ class Recommender(nn.ModuleList):
             poi_region = h[data[:, 3]]
             neg_poi = h[data[:, 4]]
             neg_poi_region = h[data[:, 5]]
-            pos_score = 10 * user * pos_poi + 0.1 * user * poi_region + pos_poi * user_region + poi_region * user_region
-            neg_score = 10 * user * neg_poi + 0.1 * user * neg_poi_region + neg_poi * user_region + neg_poi_region * user_region
+            pos_score = user * pos_poi + 0.1 * user * poi_region + pos_poi * user_region + poi_region * user_region
+            neg_score = user * neg_poi + 0.1 * user * neg_poi_region + neg_poi * user_region + neg_poi_region * user_region
         else:
             poi_region = h[data[:, 2]]
             neg_poi = h[data[:, 3]]

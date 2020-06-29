@@ -21,7 +21,6 @@ def edge_func(time0, edges):
     timedelta = torch.abs(time - time0) / 2
     msk = rel_type < 3
     timedelta[msk] = 0
-    timedelta[~msk] = 20
     timedelta = -timedelta.float()
     time_weight = torch.exp(timedelta)
     final_weight = weight * time_weight
@@ -82,15 +81,13 @@ def recallk(graph, model, dim=64, batch_size=1024, layers=2, samples=5, has_user
             pois = emb[pid2rid[:, 0]]
             pois_region = emb[pid2rid[:, 1]]
             if has_user_region:
-                scores = 10 * user * pois + 0.1 * user * pois_region + user_region * pois + user_region * pois_region
+                scores = user * pois + 0.1 * user * pois_region + user_region * pois + user_region * pois_region
             else:
                 scores = user * pois + user * pois_region
             scores = scores.sum(1)
             scores, indices = torch.sort(scores, descending=True)
             position = (indices == true_indices).nonzero().item()
             for k in k_list:
-                # if true_indices in indices[:k]:
-                #     accuracy[k] += 1
                 if position < k:
                     accuracy[k] += 1
                     ndcg[k] += 1 / math.log2(position+2)
